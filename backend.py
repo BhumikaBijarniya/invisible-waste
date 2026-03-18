@@ -15,13 +15,13 @@ def get_db():
     return conn
 
 
-# CREATE TABLES
+# -------- CREATE TABLES --------
 conn = get_db()
 
 conn.execute("""
 CREATE TABLE IF NOT EXISTS users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-username TEXT,
+username TEXT UNIQUE,
 password TEXT
 )
 """)
@@ -41,12 +41,13 @@ conn.commit()
 conn.close()
 
 
+# -------- HOME --------
 @app.route("/")
 def home():
     return redirect("/signup")
 
 
-# SIGNUP
+# -------- SIGNUP --------
 @app.route("/signup", methods=["GET","POST"])
 def signup():
     if request.method == "POST":
@@ -54,16 +55,23 @@ def signup():
         password = request.form["password"].strip()
 
         conn = get_db()
-        conn.execute("INSERT INTO users(username,password) VALUES (?,?)",(username,password))
-        conn.commit()
-        conn.close()
 
+        try:
+            conn.execute(
+                "INSERT INTO users(username,password) VALUES (?,?)",
+                (username,password)
+            )
+            conn.commit()
+        except:
+            return "User already exists ❌"
+
+        conn.close()
         return redirect("/login")
 
     return render_template("signup.html")
 
 
-# LOGIN
+# -------- LOGIN --------
 @app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -71,33 +79,38 @@ def login():
         password = request.form["password"].strip()
 
         conn = get_db()
+
         user = conn.execute(
-            "SELECT * FROM users WHERE username=? AND password=?",
-            (username,password)
+            "SELECT * FROM users WHERE username=?",
+            (username,)
         ).fetchone()
+
         conn.close()
 
         if user:
-            session["user"] = username
+            if user["password"] == password:
+                session["user"] = username
 
-            if username == "admin":
-                return redirect("/dashboard")
+                if username == "admin":
+                    return redirect("/dashboard")
+                else:
+                    return redirect("/dashboard")
             else:
-                return redirect("/dashboard")
-
-        return "Invalid Credentials ❌"
+                return "Wrong Password ❌"
+        else:
+            return "User not found ❌"
 
     return render_template("login.html")
 
 
-# LOGOUT
+# -------- LOGOUT --------
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect("/login")
 
 
-# REPORT
+# -------- REPORT --------
 @app.route("/report", methods=["GET","POST"])
 def report():
 
@@ -128,7 +141,7 @@ def report():
     return render_template("report.html")
 
 
-# DASHBOARD
+# -------- DASHBOARD --------
 @app.route("/dashboard")
 def dashboard():
 
@@ -138,10 +151,8 @@ def dashboard():
     conn = get_db()
 
     if session["user"] == "admin":
-        # admin sees all
         reports = conn.execute("SELECT * FROM reports").fetchall()
     else:
-        # user sees only their reports
         reports = conn.execute(
             "SELECT * FROM reports WHERE username=?",
             (session["user"],)
@@ -152,7 +163,7 @@ def dashboard():
     return render_template("dashboard.html", reports=reports)
 
 
-# DELETE (admin only)
+# -------- DELETE --------
 @app.route("/delete/<int:id>")
 def delete(id):
 
@@ -167,5 +178,6 @@ def delete(id):
     return redirect("/dashboard")
 
 
+# -------- RUN --------
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,61 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Login - Invisible Waste</title>
-
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 
-<body>
+<body class="premium-bg">
 
-<header class="navbar">
+<div class="overlay"></div>
 
-<div class="logo">🌿 Invisible Waste</div>
+<div class="center-box">
 
-<nav>
+<div class="glass-card">
 
-<a href="/">Home</a>
-<a href="/signup">Signup</a>
-<a href="/report">Report</a>
-
-</nav>
-
-</header>
-
-<section class="form-section">
-
-<div class="form-card">
+<h1 class="brand-title">Invisible Waste</h1>
 
 <h2>Login</h2>
-
-<p class="form-text">
-Access your account to report waste and view reports.
-</p>
+<p class="subtitle">Welcome Back</p>
 
 <form method="POST">
 
+<div class="input-group">
 <input type="text" name="username" placeholder="Username" required>
+</div>
 
+<div class="input-group">
 <input type="password" name="password" placeholder="Password" required>
+</div>
 
-<button type="submit" class="primary-btn">Login</button>
+<button class="login-btn">Login</button>
 
 </form>
 
-<p class="switch-text">
-Don't have an account?
-<a href="/signup">Signup</a>
+<p class="switch">
+Don't have an account? <a href="/signup">Sign Up</a>
 </p>
 
 </div>
 
-</section>
+</div>
 
 </body>
 </html>

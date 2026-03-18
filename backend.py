@@ -78,10 +78,9 @@ def login():
         username = request.form["username"].strip()
         password = request.form["password"].strip()
 
-        # 🔥 FIXED ADMIN LOGIN
+        # 👑 ADMIN LOGIN
         if username == "bhumikabijarniya" and password == "bijarniya":
-            session["user"] = username
-            session["role"] = "admin"
+            session["username"] = username
             return redirect("/dashboard")
 
         conn = get_db()
@@ -95,8 +94,7 @@ def login():
 
         if user:
             if user["password"] == password:
-                session["user"] = username
-                session["role"] = "user"
+                session["username"] = username
                 return redirect("/report")
             else:
                 return "Wrong Password ❌"
@@ -117,7 +115,7 @@ def logout():
 @app.route("/report", methods=["GET","POST"])
 def report():
 
-    if "user" not in session:
+    if "username" not in session:
         return redirect("/login")
 
     if request.method == "POST":
@@ -134,34 +132,53 @@ def report():
         conn = get_db()
         conn.execute(
             "INSERT INTO reports(location,description,image,status,username) VALUES (?,?,?,?,?)",
-            (location,description,filename,"Pending",session["user"])
+            (location,description,filename,"Pending",session["username"])
         )
         conn.commit()
         conn.close()
 
-        return redirect("/dashboard")
+        # 👇 ADMIN vs USER redirect
+        if session["username"] == "bhumikabijarniya":
+            return redirect("/dashboard")
+        else:
+            return redirect("/my_reports")
 
     return render_template("report.html")
 
 
-# -------- DASHBOARD --------
-@app.route("/dashboard")
-def dashboard():
+# -------- USER REPORTS --------
+@app.route("/my_reports")
+def my_reports():
 
-    if "user" not in session:
+    if "username" not in session:
         return redirect("/login")
 
     conn = get_db()
 
-    # 👑 ADMIN → all reports
-    if session.get("role") == "admin":
-        reports = conn.execute("SELECT * FROM reports").fetchall()
-    else:
-        # 👤 USER → only own reports
-        reports = conn.execute(
-            "SELECT * FROM reports WHERE username=?",
-            (session["user"],)
-        ).fetchall()
+    reports = conn.execute(
+        "SELECT * FROM reports WHERE username=?",
+        (session["username"],)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("my_reports.html", reports=reports)
+
+
+# -------- ADMIN DASHBOARD --------
+@app.route("/dashboard")
+def dashboard():
+
+    if "username" not in session:
+        return redirect("/login")
+
+    # 👑 ONLY ADMIN ACCESS
+    if session["username"] != "bhumikabijarniya":
+        return redirect("/login")
+
+    conn = get_db()
+
+    reports = conn.execute("SELECT * FROM reports").fetchall()
 
     conn.close()
 
@@ -172,7 +189,7 @@ def dashboard():
 @app.route("/delete/<int:id>")
 def delete(id):
 
-    if session.get("role") != "admin":
+    if session.get("username") != "bhumikabijarniya":
         return redirect("/login")
 
     conn = get_db()

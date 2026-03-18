@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="navbar">
+<div class="logo">Invisible Waste</div>
+
+<div>
+<span class="admin-badge">👑 Admin</span>
+<a href="/logout" class="logout-btn">Logout</a>
+</div>
+</div>
+
+<div class="dashboard-card">
+
+<h2>All Waste Reports</h2>
+
+<table>
+<tr>
+<th>Location</th>
+<th>Description</th>
+<th>Image</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for report in reports %}
+<tr>
+<td>{{report.location}}</td>
+<td>{{report.description}}</td>
+
+<td>
+<img src="{{ url_for('static', filename='uploads/' + report.image) }}" width="100">
+</td>
+
+<td>{{report.status}}</td>
+
+<td>
+<a href="/delete/{{report.id}}" class="delete-btn">Delete</a>
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

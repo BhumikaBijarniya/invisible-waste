@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Report Waste - Invisible Waste</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">🌿 Invisible Waste</div>
+
+<nav>
+
+<a href="/">Home</a>
+<a href="/signup">Signup</a>
+<a href="/login">Login</a>
+<a href="/dashboard">Dashboard</a>
+
+</nav>
+
+</header>
+
+<section class="form-section">
+
+<div class="form-card">
+
+<h2>Report Waste</h2>
+
+<p class="form-text">
+Help keep the city clean by reporting waste locations.
+</p>
+
+<form method="POST" enctype="multipart/form-data">
+
+<input type="text" name="location" placeholder="Waste Location" required>
+
+<textarea name="description" placeholder="Describe waste"></textarea>
+
+<input type="file" name="image">
+
+<button type="submit" class="primary-btn">Submit Report</button>
+
+</form>
+
+</div>
+
+</section>
+
+</body>
+</html>

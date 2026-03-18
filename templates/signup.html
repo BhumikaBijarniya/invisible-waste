@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Signup - Invisible Waste</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">🌿 Invisible Waste</div>
+
+<nav>
+
+<a href="/">Home</a>
+<a href="/login">Login</a>
+<a href="/report">Report</a>
+
+</nav>
+
+</header>
+
+<section class="form-section">
+
+<div class="form-card">
+
+<h2>Create Account</h2>
+
+<p class="form-text">
+Join the community and help keep the city clean.
+</p>
+
+<form action="/signup" method="POST">
+
+<input type="text" name="username" placeholder="Username" required>
+
+<input type="password" name="password" placeholder="Password" required>
+
+<button type="submit" class="primary-btn">Sign Up</button>
+
+</form>
+
+<p class="switch-text">
+Already have an account?
+<a href="/login">Login</a>
+</p>
+
+</div>
+
+</section>
+
+</body>
+</html>

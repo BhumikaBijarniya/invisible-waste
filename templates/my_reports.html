@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Reports</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h2 style="text-align:center;">My Reports</h2>
+
+<table border="1" style="margin:auto;">
+<tr>
+<th>ID</th>
+<th>Location</th>
+<th>Description</th>
+</tr>
+
+{% for row in data %}
+<tr>
+<td>{{ row[0] }}</td>
+<td>{{ row[2] }}</td>
+<td>{{ row[3] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

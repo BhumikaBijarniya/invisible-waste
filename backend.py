@@ -132,12 +132,12 @@ def report():
         conn = get_db()
         conn.execute(
             "INSERT INTO reports(location,description,image,status,username) VALUES (?,?,?,?,?)",
-            (location,description,filename,"Pending",session["username"])
+            (location, description, filename, "Pending", session["username"])
         )
         conn.commit()
         conn.close()
 
-        # 👇 ADMIN vs USER redirect
+        # 👇 FIXED REDIRECT
         if session["username"] == "bhumikabijarniya":
             return redirect("/dashboard")
         else:
@@ -155,9 +155,11 @@ def my_reports():
 
     conn = get_db()
 
+    username = session["username"].strip()
+
     reports = conn.execute(
         "SELECT * FROM reports WHERE username=?",
-        (session["username"],)
+        (username,)
     ).fetchall()
 
     conn.close()
@@ -172,7 +174,6 @@ def dashboard():
     if "username" not in session:
         return redirect("/login")
 
-    # 👑 ONLY ADMIN ACCESS
     if session["username"] != "bhumikabijarniya":
         return redirect("/login")
 

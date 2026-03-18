@@ -1,59 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Report Waste - Invisible Waste</title>
-
+<title>Report Waste</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 
-<body>
+<body class="premium-bg">
 
-<header class="navbar">
+<div class="overlay"></div>
 
-<div class="logo">🌿 Invisible Waste</div>
+<div class="center-box">
+<div class="glass-card">
 
-<nav>
+<h1 class="brand-title">Invisible Waste</h1>
 
-<a href="/">Home</a>
-<a href="/signup">Signup</a>
-<a href="/login">Login</a>
-<a href="/dashboard">Dashboard</a>
-
-</nav>
-
-</header>
-
-<section class="form-section">
-
-<div class="form-card">
-
-<h2>Report Waste</h2>
-
-<p class="form-text">
-Help keep the city clean by reporting waste locations.
-</p>
+<h2>Submit Report</h2>
+<p class="subtitle">Report Illegal Waste</p>
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="text" name="location" placeholder="Waste Location" required>
+<input type="text" name="location" placeholder="Location" required>
 
-<textarea name="description" placeholder="Describe waste"></textarea>
+<textarea name="description" placeholder="Describe the issue..." required></textarea>
 
 <input type="file" name="image">
 
-<button type="submit" class="primary-btn">Submit Report</button>
+<button class="login-btn">Submit Report</button>
 
 </form>
 
-</div>
+<p class="switch">
+<a href="/dashboard">View My Reports</a>
+</p>
 
-</section>
+</div>
+</div>
 
 </body>
 </html>

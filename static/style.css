@@ -1,59 +1,86 @@
-body{
-font-family:Arial;
-margin:0;
-background:#f4f6f9;
+/* BACKGROUND */
+.premium-bg {
+  height: 100vh;
+  background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.navbar{
-display:flex;
-justify-content:space-between;
-padding:15px 40px;
-background:#2e7d32;
-color:white;
+/* DARK OVERLAY */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 50, 0, 0.5);
 }
 
-.logo{
-font-size:20px;
-font-weight:bold;
+/* CENTER BOX */
+.center-box {
+  position: relative;
+  z-index: 2;
 }
 
-.admin-badge{
-background:gold;
-padding:5px 10px;
-border-radius:5px;
-margin-right:15px;
+/* GLASS CARD */
+.glass-card {
+  width: 350px;
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  color: white;
 }
 
-.logout-btn{
-color:white;
-text-decoration:none;
+/* TITLE */
+.brand-title {
+  font-size: 26px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
-.dashboard-card{
-width:80%;
-margin:40px auto;
-background:white;
-padding:30px;
-border-radius:10px;
+/* SUBTITLE */
+.subtitle {
+  font-size: 14px;
+  margin-bottom: 20px;
+  opacity: 0.8;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
+/* INPUT */
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 
-th{
-background:#2e7d32;
-color:white;
-padding:10px;
+/* BUTTON */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #2e7d32, #66bb6a);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-td{
-padding:10px;
-border-bottom:1px solid #ddd;
+.login-btn:hover {
+  transform: scale(1.05);
 }
 
-.delete-btn{
-color:red;
-text-decoration:none;
+/* SWITCH TEXT */
+.switch {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch a {
+  color: #a5d6a7;
+  text-decoration: none;
 }

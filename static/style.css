@@ -7,15 +7,15 @@
   align-items: center;
 }
 
-/* DARK OVERLAY */
+/* OVERLAY */
 .overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(0, 50, 0, 0.5);
+  background: rgba(0, 50, 0, 0.6);
 }
 
-/* CENTER BOX */
+/* CENTER */
 .center-box {
   position: relative;
   z-index: 2;
@@ -23,12 +23,12 @@
 
 /* GLASS CARD */
 .glass-card {
-  width: 350px;
+  width: 360px;
   padding: 30px;
   border-radius: 20px;
   backdrop-filter: blur(15px);
   background: rgba(255,255,255,0.15);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
   text-align: center;
   color: white;
 }
@@ -37,24 +37,29 @@
 .brand-title {
   font-size: 26px;
   margin-bottom: 10px;
-  font-weight: bold;
 }
 
 /* SUBTITLE */
 .subtitle {
   font-size: 14px;
   margin-bottom: 20px;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* INPUT */
-.input-group input {
+input, textarea {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 10px;
   border: none;
   outline: none;
+}
+
+/* TEXTAREA */
+textarea {
+  resize: none;
+  height: 80px;
 }
 
 /* BUTTON */
@@ -74,7 +79,7 @@
   transform: scale(1.05);
 }
 
-/* SWITCH TEXT */
+/* LINK */
 .switch {
   margin-top: 15px;
   font-size: 14px;

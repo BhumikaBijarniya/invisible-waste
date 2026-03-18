@@ -44,7 +44,7 @@ conn.close()
 # -------- HOME --------
 @app.route("/")
 def home():
-    return redirect("/signup")
+    return redirect("/login")
 
 
 # -------- SIGNUP --------
@@ -78,6 +78,12 @@ def login():
         username = request.form["username"].strip()
         password = request.form["password"].strip()
 
+        # 🔥 FIXED ADMIN LOGIN
+        if username == "bhumikabijarniya" and password == "bijarniya":
+            session["user"] = username
+            session["role"] = "admin"
+            return redirect("/dashboard")
+
         conn = get_db()
 
         user = conn.execute(
@@ -90,11 +96,8 @@ def login():
         if user:
             if user["password"] == password:
                 session["user"] = username
-
-                if username == "admin":
-                    return redirect("/dashboard")
-                else:
-                    return redirect("/dashboard")
+                session["role"] = "user"
+                return redirect("/report")
             else:
                 return "Wrong Password ❌"
         else:
@@ -106,7 +109,7 @@ def login():
 # -------- LOGOUT --------
 @app.route("/logout")
 def logout():
-    session.pop("user", None)
+    session.clear()
     return redirect("/login")
 
 
@@ -150,9 +153,11 @@ def dashboard():
 
     conn = get_db()
 
-    if session["user"] == "admin":
+    # 👑 ADMIN → all reports
+    if session.get("role") == "admin":
         reports = conn.execute("SELECT * FROM reports").fetchall()
     else:
+        # 👤 USER → only own reports
         reports = conn.execute(
             "SELECT * FROM reports WHERE username=?",
             (session["user"],)
@@ -163,11 +168,11 @@ def dashboard():
     return render_template("dashboard.html", reports=reports)
 
 
-# -------- DELETE --------
+# -------- DELETE (ADMIN ONLY) --------
 @app.route("/delete/<int:id>")
 def delete(id):
 
-    if "user" not in session or session["user"] != "admin":
+    if session.get("role") != "admin":
         return redirect("/login")
 
     conn = get_db()

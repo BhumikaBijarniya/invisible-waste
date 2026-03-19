@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Reports</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -21,20 +19,16 @@
 
 <div class="report-card">
 
-<!-- ADDRESS -->
-<p><b>Address:</b> {{ r.location }}</p>
+<p><b>Address:</b> {{ r["location"] }}</p>
 
-<!-- DESCRIPTION -->
-<p><b>Description:</b> {{ r.description }}</p>
+<p><b>Description:</b> {{ r["description"] }}</p>
 
-<!-- IMAGE -->
-{% if r.image %}
+{% if r["image"] %}
 <p><b>Image:</b></p>
-<img src="{{ url_for('static', filename='uploads/' + r.image) }}" class="report-img">
+<img src="{{ url_for('static', filename='uploads/' + r["image"]) }}" class="report-img">
 {% endif %}
 
-<!-- STATUS -->
-<span class="status">Status: {{ r.status }}</span>
+<span class="status">Status: {{ r["status"] }}</span>
 
 </div>
 

@@ -1,30 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Reports</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="premium-bg">
 
-<h2 style="text-align:center;">My Reports</h2>
+<div class="overlay"></div>
 
-<table border="1" style="margin:auto;">
-<tr>
-<th>ID</th>
-<th>Location</th>
-<th>Description</th>
-</tr>
+<div class="center-box">
+
+<h2 class="page-title">My Reports</h2>
+
+<div class="report-container">
 
 {% for r in reports %}
-<tr>
-<td>{{ r.id }}</td>
-<td>{{ r.location }}</td>
-<td>{{ r.description }}</td>
-</tr>
+
+<div class="report-card">
+
+<h3>{{ r.location }}</h3>
+
+<p>{{ r.description }}</p>
+
+{% if r.image %}
+<img src="{{ url_for('static', filename='uploads/' + r.image) }}" class="report-img">
+{% endif %}
+
+<span class="status">Status: {{ r.status }}</span>
+
+</div>
+
 {% endfor %}
 
-</table>
+</div>
+
+</div>
 
 </body>
 </html>

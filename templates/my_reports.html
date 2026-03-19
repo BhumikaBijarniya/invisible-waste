@@ -21,14 +21,19 @@
 
 <div class="report-card">
 
-<h3>{{ r.location }}</h3>
+<!-- ADDRESS -->
+<p><b>Address:</b> {{ r.location }}</p>
 
-<p>{{ r.description }}</p>
+<!-- DESCRIPTION -->
+<p><b>Description:</b> {{ r.description }}</p>
 
+<!-- IMAGE -->
 {% if r.image %}
+<p><b>Image:</b></p>
 <img src="{{ url_for('static', filename='uploads/' + r.image) }}" class="report-img">
 {% endif %}
 
+<!-- STATUS -->
 <span class="status">Status: {{ r.status }}</span>
 
 </div>

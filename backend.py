@@ -12,11 +12,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # -------- DATABASE CONNECTION --------
 def get_db():
     conn = psycopg2.connect(
-        host="postgresql://invisible_waste_db_user:wPba3jUvBiyELSqiWzEv9KSm5it3jZS0@dpg-d7bu2dnafjfc73f7i3t0-a.oregon-postgres.render.com/invisible_waste_db",
-        database="invisible_waste_db",
-        user="invisible_waste_db_user",
-        password="wPba3jUvBiyELSqiWzEv9KSm5it3jZS0",
-        port="5432"
+        "postgresql://invisible_waste_db_user:wPba3jUvBiyELSqiWzEv9KSm5it3jZS0@dpg-d7bu2dnafjfc73f7i3t0-a.oregon-postgres.render.com:5432/invisible_waste_db"
     )
     return conn
 

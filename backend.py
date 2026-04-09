@@ -137,7 +137,6 @@ def report():
         conn.commit()
         conn.close()
 
-        # 👇 FIXED REDIRECT
         if session["username"] == "bhumikabijarniya":
             return redirect("/dashboard")
         else:
@@ -155,11 +154,9 @@ def my_reports():
 
     conn = get_db()
 
-    username = session["username"].strip()
-
     reports = conn.execute(
         "SELECT * FROM reports WHERE username=?",
-        (username,)
+        (session["username"],)
     ).fetchall()
 
     conn.close()
@@ -186,7 +183,27 @@ def dashboard():
     return render_template("dashboard.html", reports=reports)
 
 
-# -------- DELETE (ADMIN ONLY) --------
+# -------- UPDATE STATUS --------
+@app.route("/update_status/<int:id>/<status>")
+def update_status(id, status):
+
+    if session.get("username") != "bhumikabijarniya":
+        return redirect("/login")
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE reports SET status=? WHERE id=?",
+        (status, id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/dashboard")
+
+
+# -------- DELETE --------
 @app.route("/delete/<int:id>")
 def delete(id):
 

@@ -1,12 +1,13 @@
 /* BACKGROUND */
 body.premium-bg {
   height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
   background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") no-repeat center center/cover;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 /* OVERLAY */
 .overlay {
   position: absolute;

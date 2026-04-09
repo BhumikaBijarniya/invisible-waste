@@ -125,8 +125,18 @@ textarea {
 }
 
 .status {
-  display: block;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #a5d6a7;
+  font-weight: bold;
+}
+
+/* STATUS COLORS */
+.Pending {
+  color: red;
+}
+
+.In\ Progress {
+  color: orange;
+}
+
+.Completed {
+  color: green;
 }

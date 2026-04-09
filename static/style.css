@@ -1,142 +1,181 @@
-/* BACKGROUND */
-.premium-bg {
-  height: 100vh;
-  background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") no-repeat center center/cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+from flask import Flask, render_template, request, redirect, session
+import sqlite3
+import os
 
-/* OVERLAY */
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 50, 0, 0.6);
-}
+app = Flask(__name__)
+app.secret_key = "secret123"
 
-/* CENTER */
-.center-box {
-  position: relative;
-  z-index: 2;
-}
+UPLOAD_FOLDER = "static/uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-/* GLASS CARD */
-.glass-card {
-  width: 360px;
-  padding: 30px;
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  background: rgba(255,255,255,0.15);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  text-align: center;
-  color: white;
-}
 
-/* TITLE */
-.brand-title {
-  font-size: 26px;
-  margin-bottom: 10px;
-}
+def get_db():
+    conn = sqlite3.connect("waste.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
-/* SUBTITLE */
-.subtitle {
-  font-size: 14px;
-  margin-bottom: 20px;
-  opacity: 0.9;
-}
 
-/* INPUT */
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
+# -------- CREATE TABLE --------
+conn = get_db()
 
-/* TEXTAREA */
-textarea {
-  resize: none;
-  height: 80px;
-}
+conn.execute("""
+CREATE TABLE IF NOT EXISTS reports(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+location TEXT,
+description TEXT,
+image TEXT,
+status TEXT,
+username TEXT,
+latitude TEXT,
+longitude TEXT
+)
+""")
 
-/* BUTTON */
-.login-btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(45deg, #2e7d32, #66bb6a);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+conn.execute("""
+CREATE TABLE IF NOT EXISTS users(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+username TEXT UNIQUE,
+password TEXT
+)
+""")
 
-.login-btn:hover {
-  transform: scale(1.05);
-}
+conn.commit()
+conn.close()
 
-/* LINK */
-.switch {
-  margin-top: 15px;
-  font-size: 14px;
-}
 
-.switch a {
-  color: #a5d6a7;
-  text-decoration: none;
-}
-/* REPORT UI */
-.page-title {
-  text-align: center;
-  color: white;
-  margin-bottom: 20px;
-}
+# -------- HOME --------
+@app.route("/")
+def home():
+    return redirect("/login")
 
-.report-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
 
-.report-card {
-  width: 280px;
-  padding: 20px;
-  border-radius: 15px;
-  backdrop-filter: blur(15px);
-  background: rgba(255,255,255,0.15);
-  color: white;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  transition: 0.3s;
-}
+# -------- SIGNUP --------
+@app.route("/signup", methods=["GET","POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"].strip()
+        password = request.form["password"].strip()
 
-.report-card:hover {
-  transform: scale(1.05);
-}
+        conn = get_db()
 
-.report-img {
-  width: 100%;
-  margin-top: 10px;
-  border-radius: 10px;
-}
+        try:
+            conn.execute("INSERT INTO users(username,password) VALUES (?,?)",(username,password))
+            conn.commit()
+        except:
+            return "User already exists"
 
-.status {
-  font-weight: bold;
-}
+        conn.close()
+        return redirect("/login")
 
-/* STATUS COLORS */
-.Pending {
-  color: red;
-}
+    return render_template("signup.html")
 
-.In\ Progress {
-  color: orange;
-}
 
-.Completed {
-  color: green;
-}
+# -------- LOGIN --------
+@app.route("/login", methods=["GET","POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"].strip()
+        password = request.form["password"].strip()
+
+        if username == "bhumikabijarniya" and password == "bijarniya":
+            session["username"] = username
+            return redirect("/dashboard")
+
+        conn = get_db()
+        user = conn.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+        conn.close()
+
+        if user:
+            if user["password"] == password:
+                session["username"] = username
+                return redirect("/report")
+            else:
+                return "Wrong password"
+        else:
+            return "User not found"
+
+    return render_template("login.html")
+
+
+# -------- REPORT --------
+@app.route("/report", methods=["GET","POST"])
+def report():
+
+    if "username" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        location = request.form["location"]
+        description = request.form["description"]
+        latitude = request.form["latitude"]
+        longitude = request.form["longitude"]
+
+        image = request.files["image"]
+        filename = ""
+
+        if image and image.filename != "":
+            filename = image.filename
+            image.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO reports(location,description,image,status,username,latitude,longitude) VALUES (?,?,?,?,?,?,?)",
+            (location, description, filename, "Pending", session["username"], latitude, longitude)
+        )
+        conn.commit()
+        conn.close()
+
+        if session["username"] == "bhumikabijarniya":
+            return redirect("/dashboard")
+        else:
+            return redirect("/my_reports")
+
+    return render_template("report.html")
+
+
+# -------- USER REPORTS --------
+@app.route("/my_reports")
+def my_reports():
+    if "username" not in session:
+        return redirect("/login")
+
+    conn = get_db()
+    reports = conn.execute("SELECT * FROM reports WHERE username=?", (session["username"],)).fetchall()
+    conn.close()
+
+    return render_template("my_reports.html", reports=reports)
+
+
+# -------- ADMIN DASHBOARD --------
+@app.route("/dashboard")
+def dashboard():
+    if "username" not in session:
+        return redirect("/login")
+
+    if session["username"] != "bhumikabijarniya":
+        return redirect("/login")
+
+    conn = get_db()
+    reports = conn.execute("SELECT * FROM reports").fetchall()
+    conn.close()
+
+    return render_template("dashboard.html", reports=reports)
+
+
+# -------- STATUS UPDATE --------
+@app.route("/update_status/<int:id>/<status>")
+def update_status(id, status):
+    if session.get("username") != "bhumikabijarniya":
+        return redirect("/login")
+
+    conn = get_db()
+    conn.execute("UPDATE reports SET status=? WHERE id=?", (status, id))
+    conn.commit()
+    conn.close()
+
+    return redirect("/dashboard")
+
+
+# -------- RUN --------
+if __name__ == "__main__":
+    app.run(debug=True)

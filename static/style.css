@@ -143,3 +143,71 @@ th, td {
   border-radius: 10px;
   margin-top: 10px;
 }
+/* ===== GLASS EFFECT FIX ===== */
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+/* Form Section */
+.form-section {
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glass Card */
+.form-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    width: 350px;
+    color: white;
+}
+
+/* Inputs */
+input, textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* Button */
+.primary-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #00c853;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primary-btn:hover {
+    background: #00e676;
+}
+
+/* Links */
+a {
+    color: #00e676;
+    text-decoration: none;
+}

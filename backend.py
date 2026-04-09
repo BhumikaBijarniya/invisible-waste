@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, redirect, session
 import psycopg2
 import os
+from flask import send_from_directory
 
-app = Flask(__name__)
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
+
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.secret_key = "secret123"
 
 UPLOAD_FOLDER = "static/uploads"

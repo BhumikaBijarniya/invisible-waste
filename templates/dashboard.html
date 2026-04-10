@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Dashboard</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<h2 style="text-align:center;">Admin Dashboard</h2>
+<div class="navbar">
+<div class="logo">Invisible Waste</div>
+
+<div>
+<span class="admin-badge">👑 Admin</span>
+<a href="/logout" class="logout-btn">Logout</a>
+</div>
+</div>
+
+<div class="dashboard-card">
+
+<h2>All Waste Reports</h2>
 
 <table>
 <tr>
-<th>ID</th>
 <th>Location</th>
 <th>Description</th>
+<th>Image</th>
 <th>Status</th>
-<th>Update</th>
-<th>Delete</th>
+<th>Action</th>
 </tr>
 
-{% for r in reports %}
+{% for report in reports %}
 <tr>
-<td>{{ r.id }}</td>
-<td>{{ r.location }}</td>
-<td>{{ r.description }}</td>
-<td class="status">{{ r.status }}</td>
+<td>{{report.location}}</td>
+<td>{{report.description}}</td>
 
 <td>
-<a href="/update_status/{{ r.id }}/Pending">Pending</a> |
-<a href="/update_status/{{ r.id }}/In Progress">In Progress</a> |
-<a href="/update_status/{{ r.id }}/Completed">Completed</a>
+<img src="{{ url_for('static', filename='uploads/' + report.image) }}" width="100">
 </td>
 
+<td>{{report.status}}</td>
+
 <td>
-<a href="/delete/{{ r.id }}">Delete</a>
+<a href="/delete/{{report.id}}" class="delete-btn">Delete</a>
 </td>
 
 </tr>
 {% endfor %}
 
 </table>
+
+</div>
 
 </body>
 </html>

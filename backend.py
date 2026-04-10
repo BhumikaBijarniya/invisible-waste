@@ -1,54 +1,43 @@
 from flask import Flask, render_template, request, redirect, session
-import psycopg2
+import sqlite3
 import os
-from flask import send_from_directory
 
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
-
-app = Flask(__name__, static_folder='static', static_url_path='/static')
+app = Flask(__name__)
 app.secret_key = "secret123"
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# -------- DATABASE CONNECTION --------
 def get_db():
-    conn = psycopg2.connect(
-        "postgresql://invisible_waste_db_user:wPba3jUvBiyELSqiWzEv9KSm5it3jZS0@dpg-d7bu2dnafjfc73f7i3t0-a.oregon-postgres.render.com:5432/invisible_waste_db"
-    )
+    conn = sqlite3.connect("waste.db")
+    conn.row_factory = sqlite3.Row
     return conn
 
 
-# -------- CREATE TABLE --------
+# -------- CREATE TABLES --------
 conn = get_db()
-cur = conn.cursor()
 
-cur.execute("""
+conn.execute("""
 CREATE TABLE IF NOT EXISTS users(
-id SERIAL PRIMARY KEY,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
 username TEXT UNIQUE,
 password TEXT
 )
 """)
 
-cur.execute("""
+conn.execute("""
 CREATE TABLE IF NOT EXISTS reports(
-id SERIAL PRIMARY KEY,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
 location TEXT,
 description TEXT,
 image TEXT,
 status TEXT,
-username TEXT,
-latitude TEXT,
-longitude TEXT
+username TEXT
 )
 """)
 
 conn.commit()
-cur.close()
 conn.close()
 
 
@@ -66,20 +55,17 @@ def signup():
         password = request.form["password"].strip()
 
         conn = get_db()
-        cur = conn.cursor()
 
         try:
-            cur.execute(
-                "INSERT INTO users(username,password) VALUES (%s,%s)",
+            conn.execute(
+                "INSERT INTO users(username,password) VALUES (?,?)",
                 (username,password)
             )
             conn.commit()
         except:
             return "User already exists ❌"
 
-        cur.close()
         conn.close()
-
         return redirect("/login")
 
     return render_template("signup.html")
@@ -92,22 +78,22 @@ def login():
         username = request.form["username"].strip()
         password = request.form["password"].strip()
 
-        # ADMIN LOGIN
+        # 👑 ADMIN LOGIN
         if username == "bhumikabijarniya" and password == "bijarniya":
             session["username"] = username
             return redirect("/dashboard")
 
         conn = get_db()
-        cur = conn.cursor()
 
-        cur.execute("SELECT * FROM users WHERE username=%s", (username,))
-        user = cur.fetchone()
+        user = conn.execute(
+            "SELECT * FROM users WHERE username=?",
+            (username,)
+        ).fetchone()
 
-        cur.close()
         conn.close()
 
         if user:
-            if user[2] == password:
+            if user["password"] == password:
                 session["username"] = username
                 return redirect("/report")
             else:
@@ -116,6 +102,13 @@ def login():
             return "User not found ❌"
 
     return render_template("login.html")
+
+
+# -------- LOGOUT --------
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
 
 
 # -------- REPORT --------
@@ -128,10 +121,8 @@ def report():
     if request.method == "POST":
         location = request.form["location"]
         description = request.form["description"]
-        latitude = request.form["latitude"]
-        longitude = request.form["longitude"]
-
         image = request.files["image"]
+
         filename = ""
 
         if image and image.filename != "":
@@ -139,17 +130,14 @@ def report():
             image.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
         conn = get_db()
-        cur = conn.cursor()
-
-        cur.execute(
-            "INSERT INTO reports(location,description,image,status,username,latitude,longitude) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-            (location, description, filename, "Pending", session["username"], latitude, longitude)
+        conn.execute(
+            "INSERT INTO reports(location,description,image,status,username) VALUES (?,?,?,?,?)",
+            (location, description, filename, "Pending", session["username"])
         )
-
         conn.commit()
-        cur.close()
         conn.close()
 
+        # 👇 FIXED REDIRECT
         if session["username"] == "bhumikabijarniya":
             return redirect("/dashboard")
         else:
@@ -161,16 +149,19 @@ def report():
 # -------- USER REPORTS --------
 @app.route("/my_reports")
 def my_reports():
+
     if "username" not in session:
         return redirect("/login")
 
     conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute("SELECT * FROM reports WHERE username=%s", (session["username"],))
-    reports = cur.fetchall()
+    username = session["username"].strip()
 
-    cur.close()
+    reports = conn.execute(
+        "SELECT * FROM reports WHERE username=?",
+        (username,)
+    ).fetchall()
+
     conn.close()
 
     return render_template("my_reports.html", reports=reports)
@@ -179,6 +170,7 @@ def my_reports():
 # -------- ADMIN DASHBOARD --------
 @app.route("/dashboard")
 def dashboard():
+
     if "username" not in session:
         return redirect("/login")
 
@@ -186,33 +178,24 @@ def dashboard():
         return redirect("/login")
 
     conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute("SELECT * FROM reports")
-    reports = cur.fetchall()
+    reports = conn.execute("SELECT * FROM reports").fetchall()
 
-    cur.close()
     conn.close()
 
     return render_template("dashboard.html", reports=reports)
 
 
-# -------- STATUS UPDATE --------
-@app.route("/update_status/<int:id>/<status>")
-def update_status(id, status):
+# -------- DELETE (ADMIN ONLY) --------
+@app.route("/delete/<int:id>")
+def delete(id):
+
     if session.get("username") != "bhumikabijarniya":
         return redirect("/login")
 
     conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute(
-        "UPDATE reports SET status=%s WHERE id=%s",
-        (status, id)
-    )
-
+    conn.execute("DELETE FROM reports WHERE id=?", (id,))
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect("/dashboard")

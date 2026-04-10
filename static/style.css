@@ -1,27 +1,23 @@
 /* BACKGROUND */
-body.premium-bg {
+.premium-bg {
   height: 100vh;
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
   background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* OVERLAY */
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute;
   width: 100%;
   height: 100%;
   background: rgba(0, 50, 0, 0.6);
 }
 
-/* CENTER BOX */
+/* CENTER */
 .center-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   z-index: 2;
 }
 
@@ -93,15 +89,13 @@ textarea {
   color: #a5d6a7;
   text-decoration: none;
 }
-
-/* PAGE TITLE */
+/* REPORT UI */
 .page-title {
   text-align: center;
   color: white;
   margin-bottom: 20px;
 }
 
-/* REPORT CONTAINER */
 .report-container {
   display: flex;
   flex-wrap: wrap;
@@ -109,7 +103,6 @@ textarea {
   gap: 20px;
 }
 
-/* REPORT CARD */
 .report-card {
   width: 280px;
   padding: 20px;
@@ -125,30 +118,15 @@ textarea {
   transform: scale(1.05);
 }
 
-/* IMAGE */
 .report-img {
   width: 100%;
   margin-top: 10px;
   border-radius: 10px;
 }
 
-/* STATUS */
 .status {
   display: block;
   margin-top: 10px;
   font-size: 13px;
-  font-weight: bold;
-}
-
-/* STATUS COLORS */
-.Pending {
-  color: red;
-}
-
-.In\ Progress {
-  color: orange;
-}
-
-.Completed {
-  color: green;
+  color: #a5d6a7;
 }

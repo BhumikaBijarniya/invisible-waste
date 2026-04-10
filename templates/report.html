@@ -1,64 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Report Waste</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="premium-bg">
 
-<h2>Report Waste</h2>
+<div class="overlay"></div>
+
+<div class="center-box">
+<div class="glass-card">
+
+<h1 class="brand-title">Invisible Waste</h1>
+
+<h2>Submit Report</h2>
+<p class="subtitle">Report Illegal Waste</p>
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="text" name="location" placeholder="Address" required><br><br>
+<input type="text" name="location" placeholder="Location" required>
 
-<textarea name="description" placeholder="Description" required></textarea><br><br>
+<textarea name="description" placeholder="Describe the issue..." required></textarea>
 
-<input type="file" name="image"><br><br>
+<input type="file" name="image">
 
-<!-- MAP -->
-<div id="map" style="height:300px;"></div>
-
-<input type="hidden" name="latitude" id="lat">
-<input type="hidden" name="longitude" id="lng">
-
-<br>
-<button type="submit">Submit</button>
+<button class="login-btn">Submit Report</button>
 
 </form>
 
+<p class="switch">
+<a href="/dashboard">View My Reports</a>
+</p>
 
-<script>
-function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 26.9124, lng: 75.7873},
-        zoom: 12
-    });
-
-    var marker;
-
-    map.addListener('click', function(e) {
-
-        var lat = e.latLng.lat();
-        var lng = e.latLng.lng();
-
-        document.getElementById("lat").value = lat;
-        document.getElementById("lng").value = lng;
-
-        if(marker){
-            marker.setPosition(e.latLng);
-        } else {
-            marker = new google.maps.Marker({
-                position: e.latLng,
-                map: map
-            });
-        }
-    });
-}
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+</div>
+</div>
 
 </body>
 </html>

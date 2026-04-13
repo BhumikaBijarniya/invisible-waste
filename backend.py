@@ -200,7 +200,24 @@ def delete(id):
 
     return redirect("/dashboard")
 
+# -------- UPDATE STATUS (ADMIN ONLY) --------
+@app.route("/update_status/<int:id>/<status>")
+def update_status(id, status):
 
+    if session.get("username") != "bhumikabijarniya":
+        return redirect("/login")
+
+    conn = get_db()
+
+    conn.execute(
+        "UPDATE reports SET status=? WHERE id=?",
+        (status, id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/dashboard")
 # -------- RUN --------
 if __name__ == "__main__":
     app.run(debug=True)

@@ -155,7 +155,7 @@ def my_reports():
 
     conn = get_db()
 
-    username = session["username"].strip()
+    username = session.get("username")
 
     reports = conn.execute(
         "SELECT * FROM reports WHERE username=?",

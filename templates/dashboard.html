@@ -37,9 +37,13 @@
 <img src="{{ url_for('static', filename='uploads/' + report.image) }}" width="100">
 </td>
 
-<td>{{report.status}}</td>
+<td class="status {{ report.status }}">{{ report.status }}</td>
 
 <td>
+<a href="/update_status/{{ report.id }}/Pending">Pending</a> |
+<a href="/update_status/{{ report.id }}/In Progress">In Progress</a> |
+<a href="/update_status/{{ report.id }}/Completed">Completed</a>
+<br><br>
 <a href="/delete/{{report.id}}" class="delete-btn">Delete</a>
 </td>
 

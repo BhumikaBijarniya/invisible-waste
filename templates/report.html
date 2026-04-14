@@ -57,14 +57,18 @@ function getLocation() {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
+            // hidden fields
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
 
-            document.getElementById("location").value = 
-                "Lat: " + lat + ", Lon: " + lon;
+            
+            document.getElementById("location").value = lat + ", " + lon;
+            document.querySelector('input[name="location"]').value = lat + ", " + lon;
 
             alert("Location captured successfully ✅");
 
+        }, function(error) {
+            alert("Location access denied ❌");
         });
     } else {
         alert("Geolocation not supported ❌");

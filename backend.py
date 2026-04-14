@@ -18,6 +18,16 @@ def get_db():
 # -------- CREATE TABLES --------
 conn = get_db()
 
+try:
+    conn.execute("ALTER TABLE reports ADD COLUMN latitude TEXT")
+except:
+    pass
+
+try:
+    conn.execute("ALTER TABLE reports ADD COLUMN longitude TEXT")
+except:
+    pass
+
 conn.execute("""
 CREATE TABLE IF NOT EXISTS users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,

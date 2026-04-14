@@ -21,7 +21,7 @@
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="text" name="location" placeholder="Location" required>
+<input type="text" id="location" name="location" placeholder="Location" required>
     <!-- 📍 LOCATION BUTTON -->
 <button type="button" onclick="getLocation()" class="login-btn">
 📍 Use My Current Location
@@ -35,7 +35,7 @@
 
 <!-- HIDDEN FIELDS -->
 <input type="hidden" name="latitude" id="lat">
-<input type="hidden" name="longitude" id="lng">
+<input type="hidden" name="longitude" id="lon">
 
 <button class="login-btn">Submit Report</button>
 

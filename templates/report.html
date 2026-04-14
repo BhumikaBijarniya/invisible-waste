@@ -22,15 +22,16 @@
 <form method="POST" enctype="multipart/form-data">
 
 <input type="text" name="location" placeholder="Location" required>
+    <!-- 📍 LOCATION BUTTON -->
+<button type="button" onclick="getLocation()" class="login-btn">
+📍 Use My Current Location
+</button>
+
 
 <textarea name="description" placeholder="Describe the issue..." required></textarea>
 
 <input type="file" name="image">
 
-<!-- 📍 LOCATION BUTTON -->
-<button type="button" onclick="getLocation()" class="login-btn">
-📍 Use My Current Location
-</button>
 
 <!-- HIDDEN FIELDS -->
 <input type="hidden" name="latitude" id="lat">
@@ -53,13 +54,17 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
 
-            document.getElementById("lat").value = position.coords.latitude;
-            document.getElementById("lng").value = position.coords.longitude;
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            document.getElementById("lat").value = lat;
+            document.getElementById("lon").value = lon;
+
+            document.getElementById("location").value = 
+                "Lat: " + lat + ", Lon: " + lon;
 
             alert("Location captured successfully ✅");
 
-        }, function() {
-            alert("Location access denied ❌");
         });
     } else {
         alert("Geolocation not supported ❌");

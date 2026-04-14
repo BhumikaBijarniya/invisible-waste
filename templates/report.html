@@ -27,6 +27,15 @@
 
 <input type="file" name="image">
 
+<!-- 📍 LOCATION BUTTON -->
+<button type="button" onclick="getLocation()" class="login-btn">
+📍 Use My Current Location
+</button>
+
+<!-- HIDDEN FIELDS -->
+<input type="hidden" name="latitude" id="lat">
+<input type="hidden" name="longitude" id="lng">
+
 <button class="login-btn">Submit Report</button>
 
 </form>
@@ -37,6 +46,26 @@
 
 </div>
 </div>
+
+<!-- SCRIPT -->
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            document.getElementById("lat").value = position.coords.latitude;
+            document.getElementById("lng").value = position.coords.longitude;
+
+            alert("Location captured successfully ✅");
+
+        }, function() {
+            alert("Location access denied ❌");
+        });
+    } else {
+        alert("Geolocation not supported ❌");
+    }
+}
+</script>
 
 </body>
 </html>

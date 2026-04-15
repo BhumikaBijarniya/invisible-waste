@@ -18,16 +18,6 @@ def get_db():
 # -------- CREATE TABLES --------
 conn = get_db()
 
-try:
-    conn.execute("ALTER TABLE reports ADD COLUMN latitude TEXT")
-except:
-    pass
-
-try:
-    conn.execute("ALTER TABLE reports ADD COLUMN longitude TEXT")
-except:
-    pass
-
 conn.execute("""
 CREATE TABLE IF NOT EXISTS users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,8 +122,6 @@ def report():
         location = request.form["location"]
         description = request.form["description"]
         image = request.files["image"]
-        latitude = request.form.get("latitude")
-longitude = request.form.get("longitude")
 
         filename = ""
 
@@ -142,10 +130,10 @@ longitude = request.form.get("longitude")
             image.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
         conn = get_db()
-       conn.execute(
-    "INSERT INTO reports(location,description,image,status,username,latitude,longitude) VALUES (?,?,?,?,?,?,?)",
-    (location, description, filename, "Pending", session["username"], latitude, longitude)
-)
+        conn.execute(
+            "INSERT INTO reports(location,description,image,status,username) VALUES (?,?,?,?,?)",
+            (location, description, filename, "Pending", session["username"])
+        )
         conn.commit()
         conn.close()
 

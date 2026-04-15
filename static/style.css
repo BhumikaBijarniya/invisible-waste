@@ -130,3 +130,22 @@ textarea {
   font-size: 13px;
   color: #a5d6a7;
 }
+.location-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.location-row input {
+  flex: 1;
+}
+
+.location-btn {
+  width: auto !important;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #2e7d32, #66bb6a);
+  color: white;
+  border: none;
+  cursor: pointer;
+}

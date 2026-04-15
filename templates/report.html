@@ -21,11 +21,7 @@
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="text" id="location" name="location" placeholder="Location" required>
-    <!-- 📍 LOCATION BUTTON -->
-<button type="button" onclick="getLocation()" class="login-btn">
-📍 Use My Current Location
-</button>
+<input type="text" id="location" name="location" placeholder="Location" required autocomplete="off">
 
 
 <textarea name="description" placeholder="Describe the issue..." required></textarea>
@@ -57,13 +53,12 @@ function getLocation() {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
-            // hidden fields
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
 
-            
-            document.getElementById("location").value = lat + ", " + lon;
-            document.querySelector('input[name="location"]').value = lat + ", " + lon;
+            setTimeout(() => {
+                document.getElementById("location").value = lat + ", " + lon;
+            }, 200);
 
             alert("Location captured successfully ✅");
 
@@ -75,6 +70,5 @@ function getLocation() {
     }
 }
 </script>
-
 </body>
 </html>

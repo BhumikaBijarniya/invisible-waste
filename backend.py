@@ -10,10 +10,14 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 def get_db():
-    conn = sqlite3.connect("waste.db")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(BASE_DIR, "waste.db")
+
+    print("DB Path:", db_path)  # (optional, check ke liye)
+
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
-
 
 # -------- CREATE TABLES --------
 conn = get_db()
